@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Planner Acadêmico 🎀</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Nunito for the bubbly aesthetic, Inter for readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            // Chocolate Raspberry Palette
+            choco: {
+              DEFAULT: '#804a36', // Dark brown
+              light: '#b0704d',   // Warm caramel
+            },
+            sand: {
+              DEFAULT: '#cbaf98', // Beige/sand
+              dark: '#c49675',    // Taupe
+              light: '#FDFBF9',   // Off-white base
+            },
+            raspberry: {
+              DEFAULT: '#bd1252', // Deep burgundy
+            },
+            pink: {
+              hot: '#fd85ae',     // Bright pink
+              soft: '#f9a0b7',    // Soft pink
+              bg: '#FFF0F5',      // Very light pink background
+            }
+          },
+          boxShadow: {
+            'cute': '0 4px 14px 0 rgba(249, 160, 183, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body { background-color: #FFF0F5; }
+    /* Custom Scrollbar for aesthetic */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #f9a0b7; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #fd85ae; }
+    
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+    }
+
+    /* Tab active state transitions */
+    .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+    .tab-content.active { display: block; }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .hk-decor {
+      position: absolute;
+      z-index: -1;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    /* Estilos de Edição (Textos e Imagens) */
+    [contenteditable="true"] {
+      cursor: text;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      padding: 2px 4px;
+      margin: -2px -4px;
+    }
+    [contenteditable="true"]:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 0 1px rgba(249, 160, 183, 0.5);
+    }
+    [contenteditable="true"]:focus {
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 0 2px #fd85ae;
+    }
+    .image-editable {
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .image-editable:hover {
+      opacity: 0.7;
+      filter: drop-shadow(0 4px 12px rgba(253, 133, 174, 0.6));
+    }
+  </style>
+</head>
+
+<body class="text-choco font-sans antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden relative selection:bg-pink-soft selection:text-white">
+
+  <!-- Background decorative elements -->
+  <div class="absolute top-[-50px] left-[-50px] w-64 h-64 bg-pink-soft rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+  <div class="absolute bottom-[-50px] right-[-50px] w-72 h-72 bg-sand rounded-full mix-blend-multiply filter blur-3xl opacity-40"></div>
+
+  <!-- Sidebar / Bottom Nav -->
+  <nav class="md:w-64 bg-white/80 backdrop-blur-xl border-r border-pink-soft/30 fixed md:sticky bottom-0 md:top-0 w-full md:h-screen z-50 flex md:flex-col shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none">
+    
+    <!-- Logo Area (Desktop only) -->
+    <div class="hidden md:flex flex-col items-center pt-8 pb-6 px-4 border-b border-pink-soft/20">
+      <div class="w-24 h-24 rounded-full bg-pink-bg border-4 border-white shadow-cute overflow-hidden mb-3 relative flex items-center justify-center">
+        <!-- Replaced with user's image -->
+        <img src="image_a949ca.jpg" alt="Hello Kitty Graduate" class="w-full h-full object-cover image-editable" onclick="triggerImageUpload(this)" title="Clique para alterar a imagem">
+      </div>
+      <h1 class="font-display font-bold text-xl text-choco" contenteditable="true">Meu Planner</h1>
+      <p class="text-xs text-choco-light font-medium tracking-wide uppercase mt-1" contenteditable="true">Universidade</p>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="flex md:flex-col flex-1 overflow-x-auto md:overflow-visible px-2 py-2 md:py-6 gap-1 md:gap-2 no-scrollbar justify-around md:justify-start">
+      
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active flex-shrink-0 flex md:flex-row flex-col items-center md:justify-start justify-center gap-1 md:gap-3 px-4 py-2.5 md:py-3 rounded-2xl transition-all text-choco hover:bg-pink-bg w-16 md:w-full">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <span class="text-[10px] md:text-sm font-semibold">Calendário</span>
+      </button>
+
+      <button onclick="switchTab('leituras')" id="nav-leituras" class="nav-btn flex-shrink-0 flex md:flex-row flex-col items-center md:justify-start justify-center gap-1 md:gap-3 px-4 py-2.5 md:py-3 rounded-2xl transition-all text-choco-light hover:bg-pink-bg hover:text-choco w-16 md:w-full">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        <span class="text-[10px] md:text-sm font-semibold">Leituras</span>
+      </button>
+
+      <button onclick="switchTab('disciplinas')" id="nav-disciplinas" class="nav-btn flex-shrink-0 flex md:flex-row flex-col items-center md:justify-start justify-center gap-1 md:gap-3 px-4 py-2.5 md:py-3 rounded-2xl transition-all text-choco-light hover:bg-pink-bg hover:text-choco w-16 md:w-full">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+        <span class="text-[10px] md:text-sm font-semibold">Aulas</span>
+      </button>
+
+      <button onclick="switchTab('comunicacao')" id="nav-comunicacao" class="nav-btn flex-shrink-0 flex md:flex-row flex-col items-center md:justify-start justify-center gap-1 md:gap-3 px-4 py-2.5 md:py-3 rounded-2xl transition-all text-choco-light hover:bg-pink-bg hover:text-choco w-16 md:w-full relative">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        <span class="text-[10px] md:text-sm font-semibold">Emails</span>
+        <span class="absolute top-2 right-2 md:right-4 w-2 h-2 bg-pink-hot rounded-full"></span>
+      </button>
+
+      <button onclick="switchTab('projetos')" id="nav-projetos" class="nav-btn flex-shrink-0 flex md:flex-row flex-col items-center md:justify-start justify-center gap-1 md:gap-3 px-4 py-2.5 md:py-3 rounded-2xl transition-all text-choco-light hover:bg-pink-bg hover:text-choco w-16 md:w-full">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <span class="text-[10px] md:text-sm font-semibold">Projetos</span>
+      </button>
+
+      <button onclick="switchTab('notas')" id="nav-notas" class="nav-btn flex-shrink-0 flex md:flex-row flex-col items-center md:justify-start justify-center gap-1 md:gap-3 px-4 py-2.5 md:py-3 rounded-2xl transition-all text-choco-light hover:bg-pink-bg hover:text-choco w-16 md:w-full">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+        <span class="text-[10px] md:text-sm font-semibold">Notas</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="flex-1 w-full max-w-7xl mx-auto p-4 md:p-8 pb-24 md:pb-8">
+    
+    <!-- Section 1: Dashboard & Calendário -->
+    <section id="sec-dashboard" class="tab-content active space-y-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 class="font-display font-extrabold text-3xl text-choco" contenteditable="true">Olá! 🌸</h2>
+          <p class="text-choco-light mt-1" contenteditable="true">Aqui está o resumo da sua semana acadêmica.</p>
+        </div>
+        <button onclick="alert('Funcionalidade de Sincronização com Google Agenda será adicionada na próxima versão! 📅')" class="flex items-center gap-2 bg-white border border-pink-soft px-4 py-2 rounded-xl shadow-sm hover:shadow-cute transition-all text-sm font-bold text-raspberry">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12z" fill="#fff"/><path d="M12 22.5c5.799 0 10.5-4.701 10.5-10.5S17.799 1.5 12 1.5 1.5 6.201 1.5 12 6.201 22.5 12 22.5z" fill="#f9a0b7"/><path d="M11.25 7.5h1.5v4.69l3.31 1.99-.75 1.3-4.06-2.43V7.5z" fill="#bd1252"/></svg>
+          Sincronizar Google Agenda
+        </button>
+      </div>
+
+      <div class="bg-raspberry text-white p-4 rounded-2xl shadow-cute flex justify-between items-center bg-opacity-90 backdrop-blur-sm border border-pink-hot">
+        <div>
+          <h3 class="font-display font-bold text-lg flex items-center gap-2">🚨 Modo Socorro Acadêmico</h3>
+          <p class="text-sm text-pink-soft">A semana virou um caos? A IA te ajuda a priorizar.</p>
+        </div>
+        <button onclick="openSOSModal()" class="bg-white text-raspberry font-extrabold px-6 py-3 rounded-xl hover:bg-pink-bg hover:scale-105 transition-transform shadow-lg">
+          ESTOU ATRASADA!
+        </button>
+      </div>
+
+      <!-- Content Notebook / Dashboard Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Current Month Calendar Mock -->
+        <div class="glass-panel p-5 rounded-3xl md:col-span-2 shadow-sm relative overflow-hidden">
+          <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-2">
+              <h3 class="font-display font-bold text-lg text-choco" id="calendar-month-display">Calendário</h3>
+              <div class="flex gap-1 bg-pink-bg rounded-lg p-1 ml-2">
+                <button onclick="changeMonth(-1)" class="w-6 h-6 flex items-center justify-center rounded hover:bg-white text-choco font-bold transition">&lt;</button>
+                <button onclick="changeMonth(1)" class="w-6 h-6 flex items-center justify-center rounded hover:bg-white text-choco font-bold transition">&gt;</button>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="w-3 h-3 rounded-full bg-pink-hot" title="Urgente"></span>
+              <span class="w-3 h-3 rounded-full bg-sand-dark" title="Aulas"></span>
+            </div>
+          </div>
+          
+          <!-- Simple CSS Grid Calendar -->
+          <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-choco-light mb-2">
+            <div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SAB</div>
+          </div>
+          <div class="grid grid-cols-7 gap-1 text-sm" id="calendar-grid">
+            <!-- JS will populate -->
+          </div>
+        </div>
+
+        <!-- Quick Goals & Image -->
+        <div class="space-y-6">
+          <div class="glass-panel p-5 rounded-3xl shadow-sm flex flex-col items-center justify-center relative overflow-hidden h-48 bg-pink-soft/20">
+            <img src="image_a94967.jpg" alt="Hello Kitty Glasses" class="absolute w-32 bottom-0 right-2 opacity-80 mix-blend-multiply image-editable" onclick="triggerImageUpload(this)" title="Clique para alterar a imagem">
+            <div class="z-10 w-full">
+              <h3 class="font-display font-bold text-choco mb-2" contenteditable="true">Foco da Semana</h3>
+              <ul class="space-y-2 text-sm text-choco-light font-medium">
+                <li class="flex items-center gap-2"><input type="checkbox" class="accent-pink-hot w-4 h-4 rounded"> Terminar artigo</li>
+                <li class="flex items-center gap-2"><input type="checkbox" class="accent-pink-hot w-4 h-4 rounded" checked> Responder orientador</li>
+                <li class="flex items-center gap-2"><input type="checkbox" class="accent-pink-hot w-4 h-4 rounded"> Ler Cap. 3</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="glass-panel p-5 rounded-3xl shadow-sm bg-raspberry text-white">
+            <h3 class="font-display font-bold text-lg mb-1">Motivação 💖</h3>
+            <p class="text-sm text-pink-soft italic">"Slow progress is still progress."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Leituras & Atividades -->
+    <section id="sec-leituras" class="tab-content space-y-6">
+      <div class="flex items-center gap-3 mb-2">
+        <img src="image_a94927.jpg" alt="HK Nerd" class="w-12 h-12 rounded-full border-2 border-pink-soft object-cover image-editable" onclick="triggerImageUpload(this)" title="Clique para alterar a imagem">
+        <div>
+          <h2 class="font-display font-extrabold text-2xl text-choco" contenteditable="true">Leituras & Prazos</h2>
+          <p class="text-sm text-choco-light" contenteditable="true">Calculadora inteligente de tempo de estudo.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Form -->
+        <div class="lg:col-span-5">
+          <div class="glass-panel rounded-3xl p-6 shadow-sm border border-white">
+            <h3 class="font-display font-bold text-choco mb-4 text-lg">Nova Atividade</h3>
+            
+            <form id="task-form" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-choco-light mb-1 uppercase tracking-wider">Disciplina / Projeto</label>
+                <input type="text" id="input-subject" placeholder="Ex: Metodologia..." required class="w-full px-4 py-2.5 rounded-xl border border-sand bg-white/50 focus:ring-2 focus:ring-pink-hot focus:border-pink-hot outline-none transition text-sm">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-choco-light mb-1 uppercase tracking-wider">Tarefa / Texto</label>
+                <input type="text" id="input-title" placeholder="Ex: Fichamento do Cap 1" required class="w-full px-4 py-2.5 rounded-xl border border-sand bg-white/50 focus:ring-2 focus:ring-pink-hot outline-none transition text-sm">
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-choco-light mb-1 uppercase tracking-wider">Prazo</label>
+                  <input type="date" id="input-deadline" required class="w-full px-4 py-2.5 rounded-xl border border-sand bg-white/50 focus:ring-2 focus:ring-pink-hot outline-none transition text-sm text-choco">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-choco-light mb-1 uppercase tracking-wider">Páginas</label>
+                  <input type="number" id="input-pages" min="0" value="0" class="w-full px-4 py-2.5 rounded-xl border border-sand bg-white/50 focus:ring-2 focus:ring-pink-hot outline-none transition text-sm">
+                </div>
+              </div>
+
+              <!-- Reading settings -->
+              <div class="p-4 bg-pink-bg rounded-2xl border border-pink-soft/50 space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-choco">Cálculo de Tempo ⏱️</span>
+                  <span id="calculated-time-badge" class="font-bold text-raspberry bg-white px-2 py-1 rounded-lg text-xs shadow-sm">0 min</span>
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-choco-light mb-1 uppercase">Dificuldade</label>
+                  <select id="input-difficulty" class="w-full px-3 py-2 text-sm rounded-lg border border-pink-soft/50 bg-white outline-none">
+                    <option value="facil">Tranquilo</option>
+                    <option value="media" selected>Normal</option>
+                    <option value="densa">Denso/Complexo 🤯</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-choco-light mb-1 uppercase">Tipo de Leitura</label>
+                  <div class="grid grid-cols-3 gap-2 text-xs">
+                    <label class="cursor-pointer text-center">
+                      <input type="radio" name="reading-style" value="rapida" class="peer sr-only">
+                      <div class="p-2 rounded-lg border border-pink-soft/50 bg-white peer-checked:bg-pink-hot peer-checked:text-white peer-checked:border-pink-hot transition">Rápida</div>
+                    </label>
+                    <label class="cursor-pointer text-center">
+                      <input type="radio" name="reading-style" value="normal" checked class="peer sr-only">
+                      <div class="p-2 rounded-lg border border-pink-soft/50 bg-white peer-checked:bg-pink-hot peer-checked:text-white peer-checked:border-pink-hot transition">Normal</div>
+                    </label>
+                    <label class="cursor-pointer text-center">
+                      <input type="radio" name="reading-style" value="fichamento" class="peer sr-only">
+                      <div class="p-2 rounded-lg border border-pink-soft/50 bg-white peer-checked:bg-pink-hot peer-checked:text-white peer-checked:border-pink-hot transition">Fichamento</div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="w-full py-3 bg-choco hover:bg-choco-light text-white font-bold rounded-xl shadow-cute transition-colors flex items-center justify-center gap-2">
+                Adicionar à Lista 📝
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Task List -->
+        <div class="lg:col-span-7 space-y-4">
+          <!-- Filters -->
+          <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+            <button class="px-4 py-1.5 rounded-full text-xs font-bold bg-pink-hot text-white shadow-cute whitespace-nowrap">Todas</button>
+            <button class="px-4 py-1.5 rounded-full text-xs font-bold bg-white text-choco border border-sand hover:bg-pink-bg whitespace-nowrap">Pendentes</button>
+            <button class="px-4 py-1.5 rounded-full text-xs font-bold bg-white text-choco border border-sand hover:bg-pink-bg whitespace-nowrap">Concluídas</button>
+          </div>
+          
+          <div id="task-list" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Disciplinas / Horários -->
+    <section id="sec-disciplinas" class="tab-content space-y-6">
+      <div class="flex justify-between items-end mb-4">
+        <div>
+          <h2 class="font-display font-extrabold text-2xl text-choco" contenteditable="true">Quadro de Disciplinas</h2>
+          <p class="text-sm text-choco-light" contenteditable="true">Seu cronograma fixo da semana.</p>
+        </div>
+        <button onclick="openModal('modal-disciplina')" class="bg-pink-soft hover:bg-pink-hot text-white p-2 rounded-full shadow-cute transition" title="Adicionar Disciplina">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </button>
+      </div>
+
+      <!-- Weekly Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        <!-- Seg -->
+        <div class="glass-panel rounded-3xl p-4 shadow-sm">
+          <h3 class="text-center font-bold text-raspberry border-b border-pink-soft/30 pb-2 mb-3" contenteditable="true">Segunda</h3>
+          <div class="space-y-2" id="day-seg"></div>
+        </div>
+        <!-- Ter -->
+        <div class="glass-panel rounded-3xl p-4 shadow-sm">
+          <h3 class="text-center font-bold text-raspberry border-b border-pink-soft/30 pb-2 mb-3" contenteditable="true">Terça</h3>
+          <div class="space-y-2" id="day-ter"></div>
+        </div>
+        <!-- Qua -->
+        <div class="glass-panel rounded-3xl p-4 shadow-sm">
+          <h3 class="text-center font-bold text-raspberry border-b border-pink-soft/30 pb-2 mb-3" contenteditable="true">Quarta</h3>
+          <div class="space-y-2" id="day-qua"></div>
+        </div>
+        <!-- Qui -->
+        <div class="glass-panel rounded-3xl p-4 shadow-sm">
+          <h3 class="text-center font-bold text-raspberry border-b border-pink-soft/30 pb-2 mb-3" contenteditable="true">Quinta</h3>
+          <div class="space-y-2" id="day-qui"></div>
+        </div>
+        <!-- Sex -->
+        <div class="glass-panel rounded-3xl p-4 shadow-sm">
+          <h3 class="text-center font-bold text-raspberry border-b border-pink-soft/30 pb-2 mb-3" contenteditable="true">Sexta</h3>
+          <div class="space-y-2" id="day-sex"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Comunicação (Emails & Messages) -->
+    <section id="sec-comunicacao" class="tab-content space-y-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="font-display font-extrabold text-2xl text-choco" contenteditable="true">Comunicação</h2>
+          <p class="text-sm text-choco-light" contenteditable="true">Não esqueça de responder ninguém! 💌</p>
+        </div>
+        <button class="bg-choco text-white text-sm font-bold px-4 py-2 rounded-xl shadow-sm hover:bg-choco-light transition" onclick="openModal('modal-contato')">+ Novo Contato</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Pendentes -->
+        <div class="glass-panel p-5 rounded-3xl border-t-4 border-t-pink-hot">
+          <h3 class="font-bold text-choco mb-4 flex items-center gap-2" contenteditable="true">
+            <span>🚨</span> Precisam de Resposta
+          </h3>
+          <div class="space-y-3" id="comunicacao-pendentes"></div>
+        </div>
+
+        <!-- Respondidos (History) -->
+        <div class="glass-panel p-5 rounded-3xl border-t-4 border-t-sand-dark opacity-80">
+          <h3 class="font-bold text-choco mb-4 flex items-center gap-2" contenteditable="true">
+            <span>✅</span> Já Respondidos
+          </h3>
+          <div class="space-y-3" id="comunicacao-concluidos"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Projetos -->
+    <section id="sec-projetos" class="tab-content space-y-6">
+      <div class="flex items-center gap-3 mb-4">
+        <img src="image_a8f00e.jpg" alt="Aesthetic Icon" class="w-10 h-10 rounded-lg object-cover hidden md:block image-editable" onclick="triggerImageUpload(this)">
+        <div>
+          <h2 class="font-display font-extrabold text-2xl text-choco" contenteditable="true">Projetos & Pesquisa</h2>
+          <p class="text-sm text-choco-light" contenteditable="true">Organize iniciativas independentes e da universidade.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="projetos-grid">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </section>
+
+    <!-- Section 6: Notas / Scratchpad -->
+    <section id="sec-notas" class="tab-content space-y-6">
+      <div class="flex justify-between items-end mb-4">
+        <div>
+          <h2 class="font-display font-extrabold text-2xl text-choco" contenteditable="true">Caderno de Notas 📓</h2>
+          <p class="text-sm text-choco-light" contenteditable="true">Rascunhos, ideias soltas e anotações gerais.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Quick Note Input -->
+        <div class="lg:col-span-1">
+          <div class="glass-panel p-5 rounded-3xl shadow-sm">
+            <textarea id="quick-note-input" rows="5" class="w-full bg-white/60 border border-pink-soft/50 rounded-xl p-3 text-sm text-choco focus:outline-none focus:ring-2 focus:ring-pink-hot resize-none" placeholder="Escreva uma ideia brilhante aqui..."></textarea>
+            <button onclick="addNote()" class="w-full mt-3 bg-pink-soft text-white font-bold py-2 rounded-xl hover:bg-pink-hot transition shadow-sm">Salvar Nota</button>
+          </div>
+        </div>
+        
+        <!-- Notes Masonry/Grid -->
+        <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4" id="notes-container">
+          <!-- Renderizado dinamicamente via JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal SOS Acadêmico -->
+  <div id="sos-modal" class="fixed inset-0 bg-choco/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl transform transition-all flex flex-col max-h-[90vh]">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-display font-extrabold text-2xl text-raspberry flex items-center gap-2">🚨 Calma. Respira.</h3>
+        <button onclick="closeSOSModal()" class="text-choco-light hover:text-raspberry font-bold">X</button>
+      </div>
+      
+      <div id="sos-input-area" class="space-y-4 overflow-y-auto pr-2 no-scrollbar">
+        <p class="text-sm text-choco font-medium">O que está acontecendo?</p>
+        <select id="sos-reason" class="w-full px-4 py-3 rounded-xl border border-sand bg-pink-bg focus:ring-2 focus:ring-pink-hot outline-none text-sm text-choco">
+          <option value="Não consegui fazer as leituras e a aula é logo mais">Não consegui fazer as leituras para as aulas</option>
+          <option value="Tenho muitas entregas e trabalhos se acumulando nesta semana">Muitas entregas e trabalhos acumulados</option>
+          <option value="Tenho uma prova muito em breve e ainda nem comecei a estudar">Prova chegando e não estudei</option>
+          <option value="Estou com muito pouco tempo e me sinto sobrecarregado">Pouquíssimo tempo livre / Sobrecarga</option>
+        </select>
+
+        <p class="text-sm text-choco font-medium mt-4">Sendo realista, quanto tempo livre você tem HOJE para focar?</p>
+        <input type="text" id="sos-time" placeholder="Ex: 2 horas, 45 minutos..." class="w-full px-4 py-3 rounded-xl border border-sand bg-pink-bg focus:ring-2 focus:ring-pink-hot outline-none text-sm text-choco">
+
+        <button onclick="generateSOSPlan()" class="w-full mt-4 bg-raspberry hover:bg-[#9a0f43] text-white font-bold py-3 rounded-xl shadow-cute transition-colors flex items-center justify-center gap-2">
+          <span>✨</span> Reorganizar minha vida
+        </button>
+      </div>
+
+      <div id="sos-loading" class="hidden py-8 flex flex-col items-center justify-center space-y-4">
+        <div class="w-10 h-10 border-4 border-pink-soft border-t-raspberry rounded-full animate-spin"></div>
+        <p class="text-sm font-bold text-choco-light animate-pulse">A IA está analisando suas tarefas e criando um plano de resgate...</p>
+      </div>
+
+      <div id="sos-result-area" class="hidden flex-1 overflow-y-auto pr-2 mt-4 space-y-4">
+        <div id="sos-result-text" class="prose prose-sm text-choco whitespace-pre-wrap"></div>
+        <button onclick="closeSOSModal()" class="w-full bg-sand hover:bg-sand-dark text-choco font-bold py-2 rounded-xl transition-colors">Voltar ao Planner</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal IA Email Drafter -->
+  <div id="email-modal" class="fixed inset-0 bg-choco/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl flex flex-col">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-display font-bold text-lg text-choco flex items-center gap-2"><span>✨</span> Rascunho com IA</h3>
+        <button onclick="closeEmailModal()" class="text-choco-light hover:text-raspberry font-bold">X</button>
+      </div>
+      
+      <div id="email-loading" class="hidden py-8 flex flex-col items-center justify-center space-y-4">
+        <div class="w-8 h-8 border-4 border-pink-soft border-t-pink-hot rounded-full animate-spin"></div>
+        <p class="text-xs font-bold text-choco-light">Escrevendo texto educado...</p>
+      </div>
+
+      <div id="email-content-area" class="flex flex-col flex-1">
+        <label class="text-xs font-bold text-choco-light mb-1 uppercase tracking-wider">Texto sugerido</label>
+        <textarea id="email-result-text" rows="8" class="w-full bg-pink-bg/50 border border-sand rounded-xl p-3 text-sm text-choco focus:outline-none focus:ring-2 focus:ring-pink-hot resize-none mb-4"></textarea>
+        
+        <div class="flex gap-3">
+          <button onclick="copyEmail()" class="flex-1 bg-choco hover:bg-choco-light text-white font-bold py-2.5 rounded-xl shadow-sm transition">Copiar Texto</button>
+          <button onclick="closeEmailModal()" class="px-4 bg-white border border-sand hover:bg-sand-light text-choco font-bold py-2.5 rounded-xl transition">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Global (Invisível) -->
+  <input type="file" id="global-image-upload" class="hidden" accept="image/*">
+
+  <!-- Modal Add Disciplina -->
+  <div id="modal-disciplina" class="custom-modal fixed inset-0 bg-choco/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-display font-bold text-lg text-choco">Nova Disciplina</h3>
+        <button onclick="closeModals()" class="text-choco-light hover:text-raspberry font-bold">X</button>
+      </div>
+      <form onsubmit="saveDisciplina(event)" class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-choco-light uppercase">Dia da Semana</label>
+          <select id="disc-day" class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm">
+            <option value="seg">Segunda</option>
+            <option value="ter">Terça</option>
+            <option value="qua">Quarta</option>
+            <option value="qui">Quinta</option>
+            <option value="sex">Sexta</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-choco-light uppercase">Nome</label>
+          <input type="text" id="disc-name" required class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm" placeholder="Ex: Cálculo I">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-choco-light uppercase">Horário e Local</label>
+          <input type="text" id="disc-time" required class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm" placeholder="Ex: 10:00 - Sala 2">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-choco-light uppercase">Cor</label>
+          <select id="disc-color" class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm">
+            <option value="choco">Marrom Escuro</option>
+            <option value="pink-hot">Rosa Choque</option>
+            <option value="sand-dark">Areia Escuro</option>
+            <option value="raspberry">Framboesa</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full bg-choco hover:bg-choco-light text-white font-bold py-2 rounded-xl mt-2 transition">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Add Contato -->
+  <div id="modal-contato" class="custom-modal fixed inset-0 bg-choco/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-display font-bold text-lg text-choco">Novo Contato</h3>
+        <button onclick="closeModals()" class="text-choco-light hover:text-raspberry font-bold">X</button>
+      </div>
+      <form onsubmit="saveContato(event)" class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-choco-light uppercase">Nome</label>
+          <input type="text" id="contato-name" required class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm" placeholder="Ex: Prof. Silva">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-choco-light uppercase">Contexto / Assunto</label>
+          <input type="text" id="contato-context" required class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm" placeholder="Ex: Dúvida sobre o trabalho">
+        </div>
+        <button type="submit" class="w-full bg-choco hover:bg-choco-light text-white font-bold py-2 rounded-xl mt-2 transition">Adicionar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Add Projeto -->
+  <div id="modal-projeto" class="custom-modal fixed inset-0 bg-choco/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-display font-bold text-lg text-choco">Novo Projeto</h3>
+        <button onclick="closeModals()" class="text-choco-light hover:text-raspberry font-bold">X</button>
+      </div>
+      <form onsubmit="saveProjeto(event)" class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-choco-light uppercase">Título do Projeto</label>
+          <input type="text" id="proj-title" required class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-xs font-bold text-choco-light uppercase">Categoria</label>
+            <input type="text" id="proj-tag" required class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm" placeholder="Ex: TCC">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-choco-light uppercase">Prazo</label>
+            <input type="text" id="proj-deadline" required class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm" placeholder="Ex: Nov 2026">
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-choco-light uppercase">Progresso Atual (%)</label>
+          <input type="number" id="proj-progress" min="0" max="100" value="0" class="w-full px-3 py-2 rounded-xl border border-sand bg-pink-bg text-sm">
+        </div>
+        <button type="submit" class="w-full bg-choco hover:bg-choco-light text-white font-bold py-2 rounded-xl mt-2 transition">Criar Projeto</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const GEMINI_API_KEY = ""; // Provided automatically by the Canvas environment
+    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
+
+    async function fetchGemini(prompt) {
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+      };
+      
+      try {
+        const response = await fetch(GEMINI_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Erro ao gerar resposta. Tente novamente.";
+      } catch (error) {
+        console.error("Erro na API do Gemini:", error);
+        return "Erro de conexão com a inteligência artificial.";
+      }
+    }
+
+    // --- Lógica do Botão SOS Acadêmico ---
+    function openSOSModal() {
+      document.getElementById('sos-modal').classList.remove('hidden');
+      document.getElementById('sos-input-area').classList.remove('hidden');
+      document.getElementById('sos-result-area').classList.add('hidden');
+      document.getElementById('sos-loading').classList.add('hidden');
+      document.getElementById('sos-time').value = '';
+    }
+
+    function closeSOSModal() {
+      document.getElementById('sos-modal').classList.add('hidden');
+    }
+
+    async function generateSOSPlan() {
+      const reason = document.getElementById('sos-reason').value;
+      const time = document.getElementById('sos-time').value;
+      
+      if (!time) {
+        alert("Por favor, informe quanto tempo você tem disponível hoje!");
+        return;
+      }
+
+      // Hide inputs, show loading
+      document.getElementById('sos-input-area').classList.add('hidden');
+      document.getElementById('sos-loading').classList.remove('hidden');
+
+      // Obter tarefas pendentes do array 'tasks' existente
+      const pendingTasks = tasks.filter(t => t.status !== 'concluida');
+      const taskListStr = pendingTasks.length > 0 
+        ? pendingTasks.map(t => `- ${t.subject}: ${t.title} (Prazo: ${t.deadline}, Tempo est.: ${t.estimatedMinutes} min)`).join('\n')
+        : "Nenhuma tarefa cadastrada no momento.";
+
+      const prompt = `
+        Aja como um tutor acadêmico compassivo e muito realista focado em saúde mental de estudantes universitários. 
+        Um aluno clicou no botão de emergência com a seguinte situação: "${reason}".
+        Ele tem exatamente este tempo disponível hoje: "${time}".
+        
+        Aqui estão as tarefas pendentes cadastradas no planner dele:
+        ${taskListStr}
+
+        Responda criando um plano de ação (triage) de emergência. 
+        Regras:
+        1. Comece com uma frase acolhedora validando o estresse dele.
+        2. Seja super pragmático. Não mande ele estudar 10 horas seguidas. Divida o tempo disponível dele em blocos curtos (ex: técnica Pomodoro de 45/10 ou 25/5).
+        3. Diga CLARAMENTE o que ele deve priorizar agora e o que ele PODE DEIXAR para outro dia. 
+        4. Use uma formatação limpa, com emojis e bullet points.
+        5. Mantenha a resposta curta, direta e encorajadora.
+      `;
+
+      const aiResponse = await fetchGemini(prompt);
+      
+      // Show results
+      document.getElementById('sos-loading').classList.add('hidden');
+      document.getElementById('sos-result-area').classList.remove('hidden');
+      
+      // Simple markdown parser for bold
+      let formattedResponse = aiResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      formattedResponse = formattedResponse.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      document.getElementById('sos-result-text').innerHTML = formattedResponse;
+    }
+
+    // --- Lógica do Drafter de E-mails ---
+    function openEmailModal(recipient, context) {
+      document.getElementById('email-modal').classList.remove('hidden');
+      document.getElementById('email-content-area').classList.add('hidden');
+      document.getElementById('email-loading').classList.remove('hidden');
+      document.getElementById('email-result-text').value = '';
+      
+      // Gerar automaticamente ao abrir
+      generateEmail(recipient, context);
+    }
+
+    function closeEmailModal() {
+      document.getElementById('email-modal').classList.add('hidden');
+    }
+
+    // --- Sistema de Edição de Imagens (Personalização) ---
+    let activeImage = null;
+    function triggerImageUpload(imgElement) {
+      activeImage = imgElement;
+      document.getElementById('global-image-upload').click();
+    }
+    
+    document.getElementById('global-image-upload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file && activeImage) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          activeImage.src = ev.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // --- Controle de Modais (CRUD) ---
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.remove('hidden');
+    }
+    function closeModals() {
+      document.querySelectorAll('.custom-modal').forEach(el => el.classList.add('hidden'));
+    }
+
+    // 1. Tab Navigation Logic
+    function switchTab(tabId) {
+      // Hide all sections
+      document.querySelectorAll('.tab-content').forEach(el => {
+        el.classList.remove('active');
+      });
+      // Remove active state from nav buttons
+      document.querySelectorAll('.nav-btn').forEach(el => {
+        el.classList.remove('bg-pink-bg', 'active');
+        if (el.id !== 'nav-' + tabId) {
+          el.classList.add('text-choco-light');
+          el.classList.remove('text-choco');
+        }
+      });
+      
+      // Show selected section
+      document.getElementById('sec-' + tabId).classList.add('active');
+      
+      // Highlight selected nav button
+      const activeBtn = document.getElementById('nav-' + tabId);
+      activeBtn.classList.add('bg-pink-bg', 'text-choco');
+      activeBtn.classList.remove('text-choco-light');
+    }
+
+    // 2. Simple Calendar Generator
+    let currentMonthOffset = 0;
+    
+    function changeMonth(offset) {
+      currentMonthOffset += offset;
+      generateCalendar();
+    }
+
+    function generateCalendar() {
+      const grid = document.getElementById('calendar-grid');
+      const baseDate = new Date();
+      // Atualiza o mês baseado na navegação
+      baseDate.setMonth(baseDate.getMonth() + currentMonthOffset);
+      
+      const year = baseDate.getFullYear();
+      const month = baseDate.getMonth();
+      
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      document.getElementById('calendar-month-display').textContent = `${monthNames[month]} ${year}`;
+      
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      
+      let html = '';
+      
+      // Blank days
+      for(let i=0; i<firstDay; i++) {
+        html += `<div class="p-2"></div>`;
+      }
+      
+      // Days
+      const today = new Date();
+      for(let i=1; i<=daysInMonth; i++) {
+        const isToday = (i === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+        let bgClass = isToday ? 'bg-pink-hot text-white font-bold rounded-xl shadow-cute' : 'hover:bg-pink-bg rounded-xl transition cursor-pointer text-choco font-medium hover:scale-110';
+        
+        // Mock some events randomly for visual effect
+        let eventDot = '';
+        if ((i === 10 || i === 22) && currentMonthOffset === 0) eventDot = '<div class="w-1.5 h-1.5 bg-raspberry rounded-full mx-auto mt-1"></div>';
+        if (i === 15 && currentMonthOffset === 0) eventDot = '<div class="w-1.5 h-1.5 bg-sand-dark rounded-full mx-auto mt-1"></div>';
+
+        html += `<div class="p-2 text-center flex flex-col items-center justify-center h-10 w-10 mx-auto ${bgClass}">
+                  ${i}
+                  ${eventDot}
+                 </div>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    // 3. Leituras & Atividades System
+    let tasks = [
+      { id: 1, subject: 'História', title: 'Revolução Francesa (Cap 2)', deadline: '2026-09-20', pages: 30, estimatedMinutes: 120, status: 'pendente' },
+      { id: 2, subject: 'Sociologia', title: 'Trabalho Final', deadline: '2026-09-25', pages: 0, estimatedMinutes: 180, status: 'pendente' }
+    ];
+
+    function calculateTime() {
+      const pages = parseInt(document.getElementById('input-pages').value) || 0;
+      const difficulty = document.getElementById('input-difficulty').value;
+      const style = document.querySelector('input[name="reading-style"]:checked').value;
+
+      if (pages === 0) {
+        document.getElementById('calculated-time-badge').textContent = 'Personalizado';
+        return;
+      }
+
+      let baseMinutes = style === 'rapida' ? 2.5 : (style === 'fichamento' ? 6.5 : 4);
+      let multiplier = difficulty === 'facil' ? 0.85 : (difficulty === 'densa' ? 1.35 : 1);
+      
+      let totalMins = Math.round(pages * baseMinutes * multiplier);
+      let text = totalMins > 60 ? `${Math.floor(totalMins/60)}h ${totalMins%60}m` : `${totalMins} min`;
+      
+      document.getElementById('calculated-time-badge').textContent = `~ ${text}`;
+      return totalMins;
+    }
+
+    function renderTasks() {
+      const container = document.getElementById('task-list');
+      container.innerHTML = '';
+      
+      tasks.forEach(task => {
+        const isDone = task.status === 'concluida';
+        const dateStr = new Date(task.deadline).toLocaleDateString('pt-BR', {day: '2-digit', month: 'short'});
+        
+        container.innerHTML += `
+          <div class="glass-panel p-4 rounded-2xl flex gap-3 items-start transition ${isDone ? 'opacity-60 bg-sand-light/30' : 'hover:border-pink-soft hover:shadow-cute'}">
+            <input type="checkbox" ${isDone ? 'checked' : ''} onclick="toggleTask(${task.id})" class="mt-1 w-5 h-5 accent-pink-hot rounded cursor-pointer">
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-2 mb-1">
+                <span class="text-[10px] font-bold text-choco bg-sand-light px-2 py-0.5 rounded-md">${task.subject}</span>
+                <span class="text-[10px] font-bold text-raspberry bg-pink-bg px-2 py-0.5 rounded-md flex items-center gap-1">
+                  📅 ${dateStr}
+                </span>
+              </div>
+              <h4 class="font-bold text-sm text-choco ${isDone ? 'line-through' : ''}">${task.title}</h4>
+              ${task.pages > 0 ? `
+                <div class="mt-1 text-xs text-choco-light flex items-center gap-2">
+                  <span>📖 ${task.pages} págs</span>
+                  <span>⏱️ ~${Math.floor(task.estimatedMinutes/60)}h ${task.estimatedMinutes%60}m</span>
+                </div>
+              ` : ''}
+            </div>
+            <button onclick="deleteTask(${task.id})" class="text-sand-dark hover:text-raspberry transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById('task-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const subject = document.getElementById('input-subject').value;
+      const title = document.getElementById('input-title').value;
+      const deadline = document.getElementById('input-deadline').value;
+      const pages = parseInt(document.getElementById('input-pages').value) || 0;
+      
+      const estimated = calculateTime() || 60; // default 60min se n tiver páginas
+
+      tasks.unshift({
+        id: Date.now(), subject, title, deadline, pages, estimatedMinutes: estimated, status: 'pendente'
+      });
+      
+      renderTasks();
+      e.target.reset();
+      calculateTime(); // reset badge
+    });
+
+    function toggleTask(id) {
+      const task = tasks.find(t => t.id === id);
+      if(task) {
+        task.status = task.status === 'pendente' ? 'concluida' : 'pendente';
+        renderTasks();
+      }
+    }
+    
+    function deleteTask(id) {
+      tasks = tasks.filter(t => t.id !== id);
+      renderTasks();
+    }
+
+    // Event listeners for calculator
+    document.getElementById('input-pages').addEventListener('input', calculateTime);
+    document.getElementById('input-difficulty').addEventListener('change', calculateTime);
+    document.querySelectorAll('input[name="reading-style"]').forEach(el => el.addEventListener('change', calculateTime));
+
+    // 4. Notes System Dinâmico
+    let notas = [
+      {id: 1, date: '17 Set 2026', text: 'Lembrar de perguntar ao professor sobre a formatação ABNT da página 12.', color: 'bg-[#FFF9C4] border-yellow-200', rot: 'rotate-1'},
+      {id: 2, date: '15 Set 2026', text: 'Ideia para o TCC: Fazer um cruzamento de dados sociodemográficos e evasão.', color: 'bg-pink-bg border-pink-soft', rot: '-rotate-1'}
+    ];
+
+    function renderNotas() {
+      const container = document.getElementById('notes-container');
+      container.innerHTML = '';
+      notas.forEach(n => {
+        container.innerHTML += `
+          <div class="${n.color} p-4 rounded-2xl shadow-sm border transform ${n.rot} hover:rotate-0 transition relative group animate-[fadeIn_0.3s_ease-out]">
+            <button onclick="deleteNota(${n.id})" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-choco bg-white/50 hover:bg-raspberry hover:text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs transition">X</button>
+            <div class="text-xs text-choco-light/60 mb-2 font-bold" contenteditable="true">${n.date}</div>
+            <p class="text-sm text-choco" contenteditable="true">${n.text}</p>
+          </div>
+        `;
+      });
+    }
+
+    function addNote() {
+      const input = document.getElementById('quick-note-input');
+      const text = input.value.trim();
+      if (!text) return;
+      
+      const date = new Date().toLocaleDateString('pt-BR', {day: '2-digit', month: 'short', year: 'numeric'});
+      
+      const colors = ['bg-[#FFF9C4] border-yellow-200', 'bg-pink-bg border-pink-soft', 'bg-[#E3F2FD] border-blue-200'];
+      const rots = ['rotate-1', '-rotate-1', 'rotate-2', '-rotate-2'];
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      const rot = rots[Math.floor(Math.random()*rots.length)];
+
+      notas.unshift({ id: Date.now(), date, text, color, rot });
+      renderNotas();
+      input.value = '';
+    }
+
+    function deleteNota(id) {
+      notas = notas.filter(n => n.id !== id);
+      renderNotas();
+    }
+
+    // --- 5. Sistema Dinâmico de Disciplinas ---
+    let disciplinas = {
+      seg: [{id: 1, name: 'Metodologia Científica', time: '08:00 - 10:00 • Sala 102', color: 'choco'}],
+      ter: [{id: 2, name: 'Seminário de Pesquisa', time: '14:00 - 16:00 • Auditório', color: 'pink-hot'}],
+      qua: [],
+      qui: [{id: 3, name: 'Orientação', time: '10:00 - 11:00 • Gabinete 4', color: 'sand-dark'}],
+      sex: []
+    };
+
+    function renderDisciplinas() {
+      const days = ['seg', 'ter', 'qua', 'qui', 'sex'];
+      days.forEach(day => {
+        const container = document.getElementById(`day-${day}`);
+        container.innerHTML = '';
+        if (disciplinas[day].length === 0) {
+          container.innerHTML = `<div class="text-center text-xs text-choco-light/50 py-4 italic border-2 border-dashed border-pink-soft/30 rounded-xl">Livre</div>`;
+          return;
+        }
+        disciplinas[day].forEach(d => {
+          container.innerHTML += `
+            <div class="bg-sand-light p-3 rounded-xl border-l-4 border-${d.color} text-sm shadow-sm relative group">
+              <button onclick="deleteDisciplina('${day}', ${d.id})" class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 text-raspberry text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full hover:bg-white transition">X</button>
+              <div class="font-bold text-choco" contenteditable="true">${d.name}</div>
+              <div class="text-xs text-choco-light" contenteditable="true">${d.time}</div>
+            </div>`;
+        });
+      });
+    }
+
+    function saveDisciplina(e) {
+      e.preventDefault();
+      const day = document.getElementById('disc-day').value;
+      const name = document.getElementById('disc-name').value;
+      const time = document.getElementById('disc-time').value;
+      const color = document.getElementById('disc-color').value;
+      disciplinas[day].push({ id: Date.now(), name, time, color });
+      renderDisciplinas();
+      closeModals();
+      e.target.reset();
+    }
+
+    function deleteDisciplina(day, id) {
+      disciplinas[day] = disciplinas[day].filter(d => d.id !== id);
+      renderDisciplinas();
+    }
+
+    // --- 6. Sistema Dinâmico de Comunicação ---
+    let contatos = [
+      {id: 1, name: 'Profª. Maria Silva (Orientadora)', context: 'Email: Sobre a revisão do capítulo 2', status: 'pendente'},
+      {id: 2, name: 'João (Colega de Grupo)', context: 'WhatsApp: Divisão dos slides', status: 'pendente'},
+      {id: 3, name: 'Secretaria do Curso', context: 'Envio de documentos de matrícula', status: 'concluido'}
+    ];
+
+    function renderContatos() {
+      const pendentes = document.getElementById('comunicacao-pendentes');
+      const concluidos = document.getElementById('comunicacao-concluidos');
+      pendentes.innerHTML = '';
+      concluidos.innerHTML = '';
+
+      contatos.forEach(c => {
+        if (c.status === 'pendente') {
+          pendentes.innerHTML += `
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-pink-soft/20 flex justify-between items-center group relative animate-[fadeIn_0.3s_ease-out]">
+              <button onclick="deleteContato(${c.id})" class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 bg-white border border-sand text-raspberry text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full hover:bg-raspberry hover:text-white transition shadow-sm">X</button>
+              <div class="flex-1">
+                <div class="font-bold text-sm text-choco" contenteditable="true">${c.name}</div>
+                <div class="text-xs text-choco-light mb-2" contenteditable="true">${c.context}</div>
+                <button onclick="openEmailModal('${c.name}', '${c.context}')" class="text-[10px] bg-pink-bg text-raspberry px-2 py-1 rounded border border-pink-soft hover:bg-pink-soft hover:text-white transition flex items-center gap-1 w-max">
+                  <span>✨</span> Rascunho com IA
+                </button>
+              </div>
+              <button onclick="toggleContato(${c.id})" class="w-8 h-8 rounded-full bg-pink-bg text-pink-hot flex items-center justify-center hover:bg-pink-hot hover:text-white transition">✓</button>
+            </div>
+          `;
+        } else {
+          concluidos.innerHTML += `
+            <div class="bg-sand-light/50 p-3 rounded-xl flex justify-between items-center group relative animate-[fadeIn_0.3s_ease-out]">
+              <button onclick="deleteContato(${c.id})" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-raspberry text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full hover:bg-white transition">X</button>
+              <div>
+                <div class="font-bold text-sm text-choco-light line-through" contenteditable="true">${c.name}</div>
+                <div class="text-xs text-sand-dark" contenteditable="true">${c.context}</div>
+              </div>
+              <button onclick="toggleContato(${c.id})" class="text-xs text-choco hover:text-raspberry transition font-bold">Desfazer</button>
+            </div>
+          `;
+        }
+      });
+    }
+
+    function saveContato(e) {
+      e.preventDefault();
+      const name = document.getElementById('contato-name').value;
+      const context = document.getElementById('contato-context').value;
+      contatos.unshift({ id: Date.now(), name, context, status: 'pendente' });
+      renderContatos();
+      closeModals();
+      e.target.reset();
+    }
+
+    function toggleContato(id) {
+      const contato = contatos.find(c => c.id === id);
+      if (contato) {
+        contato.status = contato.status === 'pendente' ? 'concluido' : 'pendente';
+        renderContatos();
+      }
+    }
+
+    function deleteContato(id) {
+      contatos = contatos.filter(c => c.id !== id);
+      renderContatos();
+    }
+
+    // --- 7. Sistema Dinâmico de Projetos ---
+    let projetosData = [
+      {id: 1, tag: 'TCC / Dissertação', tagColor: 'raspberry', deadline: 'Nov 2026', title: 'O Impacto da IA na Educação', progress: 45},
+      {id: 2, tag: 'Grupo de Estudo', tagColor: 'choco', deadline: 'Semanal', title: 'Clube de Leitura: Clássicos', progress: 40}
+    ];
+
+    function renderProjetos() {
+      const grid = document.getElementById('projetos-grid');
+      grid.innerHTML = '';
+      
+      projetosData.forEach(p => {
+        const progressColor = p.tagColor === 'choco' ? 'bg-choco' : 'bg-raspberry';
+        const tagBg = p.tagColor === 'choco' ? 'bg-sand-light border-sand' : 'bg-pink-bg border-pink-soft';
+        const tagText = p.tagColor === 'choco' ? 'text-choco' : 'text-raspberry';
+
+        grid.innerHTML += `
+          <div class="glass-panel p-5 rounded-3xl shadow-sm hover:shadow-cute transition border border-white relative group animate-[fadeIn_0.3s_ease-out]">
+            <button onclick="deleteProjeto(${p.id})" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white border border-sand text-raspberry text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full hover:bg-raspberry hover:text-white transition shadow-sm z-10">X</button>
+            <div class="flex justify-between items-start mb-3 pr-6">
+              <span class="text-[10px] font-bold uppercase tracking-wider ${tagText} ${tagBg} px-2 py-1 rounded-md border" contenteditable="true">${p.tag}</span>
+              <span class="text-xs font-bold text-choco" contenteditable="true">Prazo: ${p.deadline}</span>
+            </div>
+            <h3 class="font-bold text-choco text-lg mb-2" contenteditable="true">${p.title}</h3>
+            <div class="mt-4">
+              <div class="flex justify-between text-xs text-choco-light mb-1">
+                <span>Progresso</span>
+                <span contenteditable="true">${p.progress}%</span>
+              </div>
+              <div class="w-full bg-pink-bg rounded-full h-2">
+                <div class="${progressColor} h-2 rounded-full transition-all duration-500" style="width: ${p.progress}%"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Botão "Criar Novo"
+      grid.innerHTML += `
+        <div onclick="openModal('modal-projeto')" class="border-2 border-dashed border-pink-soft/50 rounded-3xl flex flex-col items-center justify-center p-6 text-pink-soft hover:bg-pink-bg hover:border-pink-hot hover:text-pink-hot transition cursor-pointer min-h-[200px]">
+          <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          <span class="font-bold text-sm">Criar Novo Projeto</span>
+        </div>
+      `;
+    }
+
+    function saveProjeto(e) {
+      e.preventDefault();
+      const title = document.getElementById('proj-title').value;
+      const tag = document.getElementById('proj-tag').value;
+      const deadline = document.getElementById('proj-deadline').value;
+      const progress = document.getElementById('proj-progress').value;
+      
+      projetosData.push({
+        id: Date.now(), title, tag, deadline, 
+        progress: parseInt(progress),
+        tagColor: Math.random() > 0.5 ? 'choco' : 'raspberry'
+      });
+      
+      renderProjetos();
+      closeModals();
+      e.target.reset();
+    }
+
+    function deleteProjeto(id) {
+      projetosData = projetosData.filter(p => p.id !== id);
+      renderProjetos();
+    }
+
+    // Init Atualizado
+    window.onload = () => {
+      document.getElementById('input-deadline').valueAsDate = new Date();
+      generateCalendar();
+      renderTasks();
+      renderNotas();
+      renderDisciplinas();
+      renderContatos();
+      renderProjetos();
+      
+      switchTab('dashboard');
+    };
+  </script>
+</body>
+</html>
